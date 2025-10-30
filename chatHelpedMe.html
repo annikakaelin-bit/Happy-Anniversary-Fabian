@@ -44,19 +44,19 @@
   <pre id="output"></pre>
 
   <script>
-    const fileInput = document.getElementById('fabian-annika');
-    const output = document.getElementById('output');
-    const previewImg = document.getElementById('preview');
+   // const fileInput = document.getElementById('fabian-annika');
+   // const output = document.getElementById('output');
+   // const previewImg = document.getElementById('preview');
 
-    fileInput.addEventListener('change', function(event) {
-      const file = event.target.files[0];
-      if (!file) return;
+    //fileInput.addEventListener('change', function(event) {
+      //const file = event.target.files[0];
+      //if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const text = e.target.result;
-        const lines = text.split(/\r?\n/);
-        output.textContent = ''; // clear
+      //const reader = new FileReader();
+      //reader.onload = function(e) {
+        //const text = e.target.result;
+        //const lines = text.split(/\r?\n/);
+        //output.textContent = ''; // clear
 
         // Print each line with line number
         //  lines.forEach((line, i) => {
@@ -65,27 +65,81 @@
         //output.textContent = line[0]
         //output.textContent = line[1]
         // Interpret first three lines as category, quote, image path (reasonable default)
-        const category = lines[0] ? lines[0].trim() : '';
-        const quote = lines[1] ? lines[1].trim() : '';
-        const imgfile = lines[2] ? lines[2].trim() : '';
+        //const category = lines[0] ? lines[0].trim() : '';
+        //const quote = lines[1] ? lines[1].trim() : '';
+        //const imgfile = lines[2] ? lines[2].trim() : '';
 
         // Optional: place text into headings if available
-        if (category) document.querySelector('h1').textContent = category;
-        if (quote) document.querySelector('h2').textContent = quote;
+        //if (category) document.querySelector('h1').textContent = category;
+        //if (quote) document.querySelector('h2').textContent = quote;
 
         // If the third line is a data URL or a relative/absolute URL, set it as img src
-        if (imgfile) {
-          previewImg.src = imgfile;
-          previewImg.alt = 'Preview image';
-        } else {
-          previewImg.removeAttribute('src');
-          previewImg.alt = 'No image specified';
-        }
+        //if (imgfile) {
+          //previewImg.src = imgfile;
+          //previewImg.alt = 'Preview image';
+        //} else {
+          //previewImg.removeAttribute('src');
+          //previewImg.alt = 'No image specified';
+        //}
+      //};
+      //reader.readAsText(file);
+    //});
+  </script>
+   <script>
+    const fileInput = document.getElementById('fabian-annika');
+    const output = document.getElementById('output');
+    const heading1 = document.querySelector('h1');
+    const heading2 = document.querySelector('h2');
+    const heading3 = document.querySelector('h3');
+    const previewImg = document.getElementById('preview');
+
+    fileInput.addEventListener('change', function(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const text = e.target.result || '';
+        // Split into lines (preserve empty lines); trim only the ends of each line
+        const lines = text.split(/\r?\n/);
+
+        // Get the first three lines (if missing, use empty string)
+        const line1 = lines[0] !== undefined ? lines[0].trim() : '';
+        const line2 = lines[1] !== undefined ? lines[1].trim() : '';
+        const line3 = lines[2] !== undefined ? lines[2].trim() : '';
+
+        // Put them into the headings
+        heading1.textContent = line1 || 'To Fabian';
+        heading2.textContent = line2 || '';
+  if (imageFileName) {
+    // Build a safe URL — encode filename in case it has spaces/special chars
+    const serverPath = './images/' + encodeURIComponent(line3);
+  
+    // Optional: show a loading/backup behaviour
+    previewImg.onload = () => {
+      previewImg.style.display = 'block';
+      previewImg.alt = imageFileName;
+    };
+    previewImg.onerror = () => {
+      // hide if missing or not an image
+      previewImg.style.display = 'none';
+      previewImg.removeAttribute('src');
+      console.warn('Image not found at', serverPath);
+    };
+  
+    previewImg.src = serverPath;
+  } else {
+    previewImg.style.display = 'none';
+    previewImg.removeAttribute('src');
+  }
+
       };
+
       reader.readAsText(file);
     });
   </script>
-  <img src="imgfile" alt="Image">
+  
 </body>
 </html>
+
 
