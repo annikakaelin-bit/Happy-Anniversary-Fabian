@@ -64,14 +64,10 @@
           }
 
           // If line3 already looks like a full URL or data URL, use it directly.
-          let imgSrc = line3;
-          if (line3) {
-            // treat as repo-relative path or simple filename -> build raw.githubusercontent.com URL
-           ;
-            imgSrc = RAW_BASE + line3;
-          }
+          let imgSrc = RAW_BASE + line3;
+          
 
-          const Today = document.createElement('todayImg');
+          const Today = document.createElement('img');
           Today.src = imgSrc;
           Today.alt = 'whoops! no image today';
           Today.addEventListener('error', () => {
