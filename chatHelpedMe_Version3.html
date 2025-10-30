@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="keywords" content="love you!">
+  <meta name="description" content="Happy Anniversary Fabian! I love you more than even I realize sometimes. This is just something you can look at when you want a reminder of that.">
+  <title>To Fabian</title>
+  <style>
+    em { color: rgb(103, 17, 55); text-align: center; font-family: Arial, sans-serif; }
+    body { background-color: rgb(112, 169, 205); color: rgb(34, 35, 72); text-align: center; font-family: Arial, sans-serif; }
+    img { max-width: 90%; height: auto; display: block; margin: 1rem auto; }
+    #output { white-space: pre-wrap; text-align: left; max-width: 800px; margin: 0.5rem auto; background: rgba(255,255,255,0.85); padding: 0.5rem; border-radius: 6px; }
+    #img { margin: 1rem auto; max-width: 90%; }
+  </style>
+</head>
+<body>
+  <h1>To Fabian</h1>
+  <h2></h2>
+  <h3></h3>
+
+  <!-- container where the image will be inserted -->
+  <div id="img" aria-live="polite"></div>
+
+  <!-- optional diagnostic / contents preview -->
+  <div id="output" aria-hidden="false"></div>
+
+  <script>
+    // CONFIG: set the raw base (branch or commit) and the text file path (relative to repo root)
+    // You may use a commit SHA (immutable) or branch name like 'main' (may change).
+    const RAW_BASE = 'https://raw.githubusercontent.com/annikakaelin-bit/Happy-Anniversary-Fabian/e4d054be70b1efda6d59690f14871e92f321f5d3/';
+    const TEXT_FILE_PATH = 'my-lines.txt'; // <-- replace with the actual text file path in the repo
+
+    const output = document.getElementById('output');
+    const heading1 = document.querySelector('h1');
+    const heading2 = document.querySelector('h2');
+    const heading3 = document.querySelector('h3');
+    const imgContainer = document.getElementById('img');
+
+    // load the text file from the repo and display image referenced on line 3
+    function loadTextFileFromRepo() {
+      const url = RAW_BASE + encodeURI(TEXT_FILE_PATH.replace(/^\/+/, ''));
+      output.textContent = 'Fetching ' + url + ' ...';
+
+      fetch(url)
+        .then(response => {
+          if (!response.ok) throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+          return response.text();
+        })
+        .then(text => {
+          const lines = text.split(/\r?\n/);
+          const line1 = lines[0] !== undefined ? lines[0].trim() : '';
+          const line2 = lines[1] !== undefined ? lines[1].trim() : '';
+          const line3 = lines[2] !== undefined ? lines[2].trim() : '';
+
+          heading1.textContent = line1 || 'To Fabian';
+          heading2.textContent = line2 || '';
+          heading3.textContent = ''; // not used
+
+          output.textContent = lines.map((l,i) => `Line ${i+1}: ${l}`).join('\n');
+
+          imgContainer.innerHTML = '';
+          if (!line3) {
+            imgContainer.textContent = 'No image filename or URL found on line 3.';
+            return;
+          }
+
+          // If line3 already looks like a full URL or data URL, use it directly.
+          let imgSrc = line3;
+          if (!/^(https?:|data:)/i.test(imgSrc)) {
+            // treat as repo-relative path or simple filename -> build raw.githubusercontent.com URL
+            const sanitized = imgSrc.replace(/^\.\/+|^\/+/, '');
+            imgSrc = RAW_BASE + encodeURI(sanitized);
+          }
+
+          const img = document.createElement('img');
+          img.src = imgSrc;
+          img.alt = line2 || 'Image referenced by line 3';
+          img.addEventListener('error', () => {
+            imgContainer.textContent = 'Could not load image: ' + imgSrc;
+          });
+          imgContainer.appendChild(img);
+        })
+        .catch(err => {
+          output.textContent = 'Failed to fetch file: ' + err.message;
+          imgContainer.textContent = '';
+        });
+    }
+
+    // Run on load
+    loadTextFileFromRepo();
+  </script>
+</body>
+</html>
