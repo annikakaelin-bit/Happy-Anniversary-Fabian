@@ -57,8 +57,6 @@
           heading2.textContent = line2 || '';
           heading3.textContent = ''; // not used
 
-          output.textContent = lines.map((l,i) => `Line ${i+1}: ${l}`).join('\n');
-
           imgContainer.innerHTML = '';
           if (!line3) {
             imgContainer.textContent = 'No image filename or URL found on line 3.';
@@ -67,10 +65,10 @@
 
           // If line3 already looks like a full URL or data URL, use it directly.
           let imgSrc = line3;
-          if (!/^(https?:|data:)/i.test(imgSrc)) {
+          if (line3) {
             // treat as repo-relative path or simple filename -> build raw.githubusercontent.com URL
-            const sanitized = imgSrc.replace(/^\.\/+|^\/+/, '');
-            imgSrc = RAW_BASE + sanitized;
+           ;
+            imgSrc = RAW_BASE + line3;
           }
 
           const Today = document.createElement('todayImg');
