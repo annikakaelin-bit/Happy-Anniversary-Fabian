@@ -40,7 +40,6 @@
     // load the text file from the repo and display image referenced on line 3
     function loadTextFileFromRepo() {
       const url = RAW_BASE + TEXT_FILE_PATH;
-      output.textContent = 'Fetching ' + url + ' ...';
 
       fetch(url)
         .then(response => {
@@ -49,9 +48,9 @@
         })
         .then(text => {
           const lines = text.split(/\r?\n/);
-          const line1 = lines[0] !== undefined ? lines[0].trim() : '';
-          const line2 = lines[1] !== undefined ? lines[1].trim() : '';
-          const line3 = lines[2] !== undefined ? lines[2].trim() : '';
+          const line1 = lines[1] !== undefined ? lines[0].trim() : '';
+          const line2 = lines[2] !== undefined ? lines[1].trim() : '';
+          const line3 = lines[3] !== undefined ? lines[2].trim() : '';
 
           heading1.textContent = line1 || 'To Fabian';
           heading2.textContent = line2 || '';
