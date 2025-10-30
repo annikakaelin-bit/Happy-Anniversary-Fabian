@@ -1,8 +1,8 @@
 <!DOCTYPE html>
   <style>
-    em { color: rgb(103, 17, 55); text-align: center; font-family: Arial, sans-serif; }
-    body { background-color: rgb(112, 169, 205); color: rgb(34, 35, 72); text-align: center; font-family: Arial, sans-serif; }
-    img { max-width: 90%; height: auto; display: block; margin: 1rem auto; }
+      em { color: rgb(103, 17, 55); text-align: center; font-family: Arial, sans-serif; }
+      body { background-color: rgb(112, 169, 205); color: rgb(34, 35, 72); text-align: center; font-family: Arial, sans-serif; }
+      img { max-width: 90%; height: auto; display: block; margin: 1rem auto; }
   </style>
 
 <b> <h1> Happy Anniversary Fabian </h1>
