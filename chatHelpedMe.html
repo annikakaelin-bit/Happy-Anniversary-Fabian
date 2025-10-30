@@ -110,7 +110,7 @@
         heading2.textContent = line2 || '';
   if (imageFileName) {
     // Build a safe URL — encode filename in case it has spaces/special chars
-    const serverPath = 'https://annikakaelin-bit.github.io/Happy-Anniversary-Fabian/' + line3 + '/';
+    const serverPath = line3
   
     // Optional: show a loading/backup behaviour
     previewImg.onload = () => {
@@ -138,6 +138,7 @@
   
 </body>
 </html>
+
 
 
 
