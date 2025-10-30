@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="keywords" content="love you!">
+  <meta name="description" content="Happy Anniversary Fabian! I love you more than even I realize sometimes. This is just something you can look at when you want a reminder of that.">
+  <title>To Fabian</title>
+  <style>
+    em {
+      color: rgb(103, 17, 55);
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      background-color: rgb(112, 169, 205);
+      color: rgb(34, 35, 72);
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    img {
+      max-width: 90%;
+      height: auto;
+      display: block;
+      margin: 1rem auto;
+    }
+    #output {
+      white-space: pre-wrap;
+      text-align: left;
+      max-width: 800px;
+      margin: 0.5rem auto;
+      background: rgba(255,255,255,0.85);
+      padding: 0.5rem;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h1>To Fabian</h1>
+  <h2></h2>
+  <h3></h3>
+
+  <input type="file" id="fabian-annika" accept=".txt" />
+  <pre id="output"></pre>
+  <img id="preview" src="" alt="Image">
+
+  <script>
+    const fileInput = document.getElementById('fabian-annika');
+    const output = document.getElementById('output');
+    const previewImg = document.getElementById('preview');
+
+    fileInput.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const text = e.target.result;
+        const lines = text.split(/\r?\n/);
+        output.textContent = ''; // clear
+
+        // Print each line with line number
+        //  lines.forEach((line, i) => {
+        //  output.textContent += `Line ${i + 1}: ${line}\n`;
+        //});
+        //output.textContent = line[0]
+        //output.textContent = line[1]
+        // Interpret first three lines as category, quote, image path (reasonable default)
+        const category = lines[0] ? lines[0].trim() : '';
+        const quote = lines[1] ? lines[1].trim() : '';
+        const imgfile = lines[2] ? lines[2].trim() : '';
+
+        // Optional: place text into headings if available
+        if (category) document.querySelector('h1').textContent = category;
+        if (quote) document.querySelector('h2').textContent = quote;
+
+        // If the third line is a data URL or a relative/absolute URL, set it as img src
+        if (imgfile) {
+          previewImg.src = imgfile;
+          previewImg.alt = 'Preview image';
+        } else {
+          previewImg.removeAttribute('src');
+          previewImg.alt = 'No image specified';
+        }
+      };
+      reader.readAsText(file);
+    });
+  </script>
+  <img src="imgfile" alt="Image">
+</body>
+</html>

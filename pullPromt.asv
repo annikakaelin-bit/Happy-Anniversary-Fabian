@@ -1,0 +1,53 @@
+function[quote, title] = pullPromt(data)
+%% importing the correct data
+fileID = fopen('Fabina&Annika','W');
+    if fileID < 0
+        error("Unable to open file: %s",msg);
+    end
+cells = readcell(data)
+
+%%picking out a random cell
+[r, c] = size(cells)
+amount  = (r-1)*c
+
+headers = cells(1,:)
+rest = cells(2:end,:)
+
+index = randi([1,amount])
+index = 5
+
+%%pulling out the header of the cell
+loc = index./(r-1)
+loc = floor(loc)
+if mod(index,r) ~= 0
+    loc = loc + 1
+end
+title = [headers{1,loc} '\n']
+
+%% getting the data from the cell
+quoteimg = imread('heart.png')
+mask = quoteimg == (255,0,0)
+quote = []
+if ~isempty([rest{index}]) & ischar([rest{index}])
+    quote = [rest{index}]
+elseif ~isempty([rest{index}])
+    quoteimg = [rest{index}]
+else
+    if index < amount
+        index = index+1
+    else
+        index = index-1
+    end
+    quote = [rest{index}]
+end
+
+%%making the files
+if loc == 2     %%saving the file as an image
+    imwrite(quote, 'Fabian&Annika.png')
+else        %%Saving the file as text
+    fwrite(fileID,[title quote]);
+    
+end
+
+fclose(fileID);
+end
