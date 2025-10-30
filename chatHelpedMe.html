@@ -39,7 +39,8 @@
   <h1>To Fabian</h1>
   <h2></h2>
   <h3></h3>
-
+  <div id='img'></div>
+  
   <script>
    // const fileInput = document.getElementById('fabian-annika');
    // const output = document.getElementById('output');
@@ -109,8 +110,8 @@
         heading2.textContent = line2 || '';
   if (line3) {
     // Build a safe URL — encode filename in case it has spaces/special chars
-    const serverPath = 'https://github.com/annikakaelin-bit/Happy-Anniversary-Fabian/blob/main/' + line3
-    heading3.
+    const serverPath = 'https://github.com/annikakaelin-bit/Happy-Anniversary-Fabian/blob/main/' + line3;
+    document.getElementByID('img').innerHTML = '<img srs = "serverPath" alt = "us">';
   };
 
       reader.readAsText(file);
@@ -119,6 +120,7 @@
   
 </body>
 </html>
+
 
 
 
