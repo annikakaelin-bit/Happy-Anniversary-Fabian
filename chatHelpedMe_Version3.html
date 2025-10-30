@@ -59,7 +59,7 @@
 
           output.textContent = lines.map((l,i) => `Line ${i+1}: ${l}`).join('\n');
 
-          img.innerHTML = '';
+          imgContainer.innerHTML = '';
           if (!line3) {
             imgContainer.textContent = 'No image filename or URL found on line 3.';
             return;
@@ -74,10 +74,10 @@
           }
 
           const Today = document.createElement('todayImg');
-          img.src = imgSrc;
-          img.alt = 'whoops! no image today';
-          img.addEventListener('error', () => {
-            img.textContent = 'Could not load image: ' + imgSrc;
+          imgContainer.src = imgSrc;
+          imgContainer.alt = 'whoops! no image today';
+          imgContainer.addEventListener('error', () => {
+            imgContainer.textContent = 'Could not load image: ' + imgSrc;
           });
           imgContainer.appendChild(img);
         })
