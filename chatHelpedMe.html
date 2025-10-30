@@ -83,12 +83,11 @@
     //});
   </script>
    <script>
-    const fileInput = document.getElementById('https://annikakaelin-bit.github.io/Happy-Anniversary-Fabian/fabian-annika/');
+    const fileInput = document.getElementById('https://github.com/annikakaelin-bit/Happy-Anniversary-Fabian/fabian-annika');
     const output = document.getElementById('output');
     const heading1 = document.querySelector('h1');
     const heading2 = document.querySelector('h2');
     const heading3 = document.querySelector('h3');
-    const previewImg = document.getElementById('preview');
 
     fileInput.addEventListener('change', function(event) {
       const file = event.target.files && event.target.files[0];
@@ -108,29 +107,11 @@
         // Put them into the headings
         heading1.textContent = line1 || 'To Fabian';
         heading2.textContent = line2 || '';
-  if (imageFileName) {
+  if (line3) {
     // Build a safe URL — encode filename in case it has spaces/special chars
     const serverPath = 'https://github.com/annikakaelin-bit/Happy-Anniversary-Fabian/blob/main/' + line3
-  
-    // Optional: show a loading/backup behaviour
-    previewImg.onload = () => {
-      previewImg.style.display = 'block';
-      previewImg.alt = imageFileName;
-    };
-    previewImg.onerror = () => {
-      // hide if missing or not an image
-      previewImg.style.display = 'none';
-      previewImg.removeAttribute('src');
-      console.warn('Image not found at', serverPath);
-    };
-  
-    previewImg.src = serverPath;
-  } else {
-    previewImg.style.display = 'none';
-    previewImg.removeAttribute('src');
-  }
-
-      };
+    heading3.
+  };
 
       reader.readAsText(file);
     });
@@ -138,6 +119,7 @@
   
 </body>
 </html>
+
 
 
 
