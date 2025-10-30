@@ -1,3 +1,4 @@
+<DOCTYPE m>
 function[title, quote, quoteimg] = pullPromt(data)
 %% importing the correct data
 fileID = fopen('Fabina&Annika','W');
@@ -55,4 +56,5 @@ end
 
 
 fclose(fileID);
+
 end
