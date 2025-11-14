@@ -3,17 +3,37 @@ name: Daily script
 
 on:
   schedule:
-    - cron: "30 0 * * *"
+    - cron: "0 2 * * *"
 
 jobs:
-  run-daily:
+  run-matlab:
+    name: Run MATLAB script daily
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Node (optional)
-        uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          node-version: "18"
-      - name: Run script
+          fetch-depth: 0
+
+      - name: Set up MATLAB
+        uses: mathworks/setup-matlab@v1
+        with:
+          release: "latest"    # change to a specific release like "R2024b" if required
+          # license-server: "27000@licenseserver.example.com"   # optional
+          # license-file: ${{ secrets.MATLAB_LICENSE }}         # optional (store license in repo secrets)
+
+      - name: Run MATLAB script (non-interactive)
         run: |
-          ./scripts/doingIt.m
+          set -e
+          mkdir -p matlab_logs
+          echo "MATLAB run started at $(date -u)" > matlab_logs/run.log
+          matlab -batch "try, run('path/to/your_script.m'), catch ME, disp(getReport(ME,'extended')), exit(1), end, exit" >> matlab_logs/run.log 2>&1
+
+      - name: Show last 200 lines of log
+        run: tail -n 200 matlab_logs/run.log || true
+
+      - name: Upload logs as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: matlab-run-logs
+          path: matlab_logs
