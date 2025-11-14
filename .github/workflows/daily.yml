@@ -3,11 +3,12 @@ name: Daily script
 
 on:
   schedule:
+    # Runs every day at 02:00 AM UTC
     - cron: "0 2 * * *"
 
 jobs:
   run-matlab:
-    name: Run MATLAB script daily
+    name: Run MATLAB Script Daily
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -15,25 +16,31 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up MATLAB
+      - name: Set up MATLAB (Pinned Release)
         uses: mathworks/setup-matlab@v1
         with:
-          release: "latest"    # change to a specific release like "R2024b" if required
-          # license-server: "27000@licenseserver.example.com"   # optional
-          # license-file: ${{ secrets.MATLAB_LICENSE }}         # optional (store license in repo secrets)
+          # Pin to a specific, stable release for reliability
+          release: "R2024a" 
+          # license-server: "27000@licenseserver.example.com" # optional
 
       - name: Run MATLAB script (non-interactive)
+        # Ensure you replace 'scripts/your_script.m' with the actual path
         run: |
           set -e
           mkdir -p matlab_logs
-          echo "MATLAB run started at $(date -u)" > matlab_logs/run.log
-          matlab -batch "try, run('path/to/your_script.m'), catch ME, disp(getReport(ME,'extended')), exit(1), end, exit" >> matlab_logs/run.log 2>&1
+          LOG_FILE="matlab_logs/run.log"
+          echo "MATLAB run started at $(date -u)" > $LOG_FILE
+          
+          # Execute the script, catch errors, and ensure a non-zero exit code on failure
+          matlab -batch "try, run('scripts/your_script.m'), catch ME, disp(getReport(ME,'extended')), exit(1), end, exit" >> $LOG_FILE 2>&1
 
       - name: Show last 200 lines of log
         run: tail -n 200 matlab_logs/run.log || true
 
-      - name: Upload logs as artifact
+      - name: Upload logs as artifact (with retention)
         uses: actions/upload-artifact@v4
         with:
           name: matlab-run-logs
           path: matlab_logs
+          # Clean up logs after 7 days to save storage
+          retention-days: 7
