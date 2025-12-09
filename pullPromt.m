@@ -41,7 +41,7 @@ title = [headers{1,loc}]
 %% getting the data from the cell
 quoteimg = 'heart.png';
 
-quote = ''
+quote = 'You'
 if ~isempty([rest{index}]) & ischar([rest{index}])
     quote = [rest{index}]
 end
