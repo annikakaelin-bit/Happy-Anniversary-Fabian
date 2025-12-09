@@ -16,30 +16,23 @@ rest = cells(2:end,:)
 amount = r*c
 
 index = randi([1,amount])
-
-%%pulling out the header of the cell
-loc = index./(r-1)
-loc = floor(loc)
-if mod(index,r) ~= 0
-    loc = loc + 1
-end
-title = [headers{1,loc}]
-
-%% getting the data from the cell
-quoteimg = 'heart.png';
-
-
-
-
-quote = ''
-if ~isempty([rest{index}]) & ischar([rest{index}])
-    quote = [rest{index}]
-else
+if isempty(rest{index})
     if index < amount
         index = index+1
     else
         index = index-1
     end
+end
+%%pulling out the header of the cell
+loc = index./(r)
+loc = ceil(loc)
+title = [headers{1,loc}]
+
+%% getting the data from the cell
+quoteimg = 'heart.png';
+
+quote = ''
+if ~isempty([rest{index}]) & ischar([rest{index}])
     quote = [rest{index}]
 end
 
