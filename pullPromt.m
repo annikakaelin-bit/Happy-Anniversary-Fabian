@@ -54,10 +54,9 @@ if loc == 2     %%saving the file as an image
 end
 
 info = [{title} {quote} {quoteimg}]
-for i = 1:length(info)
-    fprintf(fileID,[info{i} '\n'])
-end
-
+fprintf(fileID,[info{1} '\n'])
+fprintf(fileID,[info{2} '\n'])
+fprintf(fileID,[info{3}])
 
 fclose(fileID);
 
