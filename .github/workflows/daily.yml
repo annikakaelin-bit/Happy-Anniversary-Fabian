@@ -1,4 +1,3 @@
-<doctype yml>
 name: Daily script
 
 on:
@@ -7,8 +6,8 @@ on:
     - cron: "0 2 * * *"
 
 jobs:
-  run-matlab:
-    name: Run MATLAB Script Daily
+  run-octave:
+    name: Run doingIt.m Daily
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -16,31 +15,37 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up MATLAB (Pinned Release)
-        uses: mathworks/setup-matlab@v1
-        with:
-          # Pin to a specific, stable release for reliability
-          release: "R2024a" 
-          # license-server: "27000@licenseserver.example.com" # optional
+      - name: Set up Octave
+        run: sudo apt-get update && sudo apt-get install -y octave
 
-      - name: Run MATLAB script (non-interactive)
-        # Ensure you replace 'scripts/your_script.m' with the actual path
+      - name: Run doingIt.m script
         run: |
           set -e
-          mkdir -p matlab_logs
-          LOG_FILE="matlab_logs/run.log"
-          echo "MATLAB run started at $(date -u)" > $LOG_FILE
+          mkdir -p logs
+          LOG_FILE="logs/run.log"
+          echo "Octave run started at $(date -u)" > $LOG_FILE
           
-          # Execute the script, catch errors, and ensure a non-zero exit code on failure
-          matlab -batch "try, run('scripts/your_script.m'), catch ME, disp(getReport(ME,'extended')), exit(1), end, exit" >> $LOG_FILE 2>&1
+          # Execute the script
+          octave doingIt.m >> $LOG_FILE 2>&1 || true
 
       - name: Show last 200 lines of log
-        run: tail -n 200 matlab_logs/run.log || true
+        run: tail -n 200 logs/run.log || true
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git add -A
+          if git diff-index --quiet HEAD --; then
+            echo "No changes to commit"
+          else
+            git commit -m "Daily run of doingIt.m"
+            git push
+          fi
 
       - name: Upload logs as artifact (with retention)
         uses: actions/upload-artifact@v4
         with:
-          name: matlab-run-logs
-          path: matlab_logs
-          # Clean up logs after 7 days to save storage
+          name: octave-run-logs
+          path: logs
           retention-days: 7
