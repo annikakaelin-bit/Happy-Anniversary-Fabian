@@ -2,7 +2,7 @@
 <m>
 function[title, quote, quoteimg] = pullPromt(data)
 %% importing the correct data
-fileID = fopen('Fabina&Annika','W');
+fileID = fopen('fabian-annika.txt','W');
     if fileID < 0
          error("Unable to open file: %s",msg);
     end
