@@ -1,12 +1,22 @@
-<DOCTYPE m>
-<m>
 function[title, quote, quoteimg] = pullPromt(data)
 %% importing the correct data
 fileID = fopen('fabian-annika.txt','W');
     if fileID < 0
          error("Unable to open file: %s",msg);
     end
-cells = readcell(data)
+% Use a simple CSV reader for Octave compatibility
+fid = fopen(data);
+cells = {};
+row = 1;
+while ~feof(fid)
+    line = fgetl(fid);
+    if ischar(line)
+        parts = strsplit(line, ',');
+        cells(row,:) = parts;
+        row = row + 1;
+    end
+end
+fclose(fid);
 
 %%picking out a random cell
 
@@ -53,4 +63,3 @@ fclose(fileID);
 
 end
 
-</m>
