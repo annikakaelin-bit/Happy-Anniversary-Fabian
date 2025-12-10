@@ -3,7 +3,7 @@ name: Daily script
 on:
   schedule:
     # Runs every day at 02:00 AM UTC
-    - cron: "31 12 * * *"
+    - cron: "46 9 * * *"
 
 jobs:
   run-octave:
