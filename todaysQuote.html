@@ -25,6 +25,73 @@
   <div id="output" aria-hidden="false"></div>
 
   <script>
+    
+          const fs = require('fs');
+    
+    // data = path to CSV-like file
+    function pullPromt(data) {
+        // --- Read the file into a 2D array (cells) ---
+        const raw = fs.readFileSync(data, 'utf8');
+        const cells = raw
+            .split(/\r?\n/)
+            .filter(line => line.trim() !== '')
+            .map(line => line.split(','));   // adjust if your delimiter is different
+    
+        // --- Separate headers and rest ---
+        const headers = cells[0];
+        const rest = cells.slice(1);
+    
+        const r = rest.length;
+        const c = rest[0].length;
+        const amount = r * c;
+    
+        // --- Pick random index (MATLAB is 1‑based, JS is 0‑based) ---
+        let index = Math.floor(Math.random() * amount);  // 0..amount-1
+    
+        // --- Compute column location (MATLAB logic preserved) ---
+        let loc = Math.floor(index / (r - 1));
+        if (index % r !== 0) {
+            loc = loc + 1;
+        }
+    
+        // MATLAB uses 1-based indexing; JS uses 0-based
+        const title = headers[loc - 1];
+    
+        // --- Default image ---
+        let quoteimg = 'heart.png';
+    
+        // --- Extract quote ---
+        let flatRest = rest.flat(); // flatten row-major like MATLAB linear indexing
+        let quote = '';
+    
+        if (flatRest[index] && typeof flatRest[index] === 'string') {
+            quote = flatRest[index];
+        } else {
+            if (index < amount - 1) {
+                index = index + 1;
+            } else {
+                index = index - 1;
+            }
+            quote = flatRest[index];
+        }
+    
+        // --- Special case: loc == 2 ---
+        if (loc === 2) {
+            quoteimg = flatRest[index];
+            quote = 'love you ;)';
+        }
+    
+        // --- Write output file ---
+        const info = [title, quote, quoteimg];
+        const output = info.join('\n');
+    
+        fs.writeFileSync('Fabina&Annika', output);
+    
+        return { title, quote, quoteimg };
+    }
+    
+    module.exports = pullPromt;
+
     // CONFIG: set the raw base (branch or commit) and the text file path (relative to repo root)
     // You may use a commit SHA (immutable) or branch name like 'main' (may change).
     const RAW_BASE = 'https://annikakaelin-bit.github.io/Happy-Anniversary-Fabian/';
@@ -36,7 +103,7 @@
     const heading3 = document.querySelector('h3');
     const imgContainer = document.getElementById('todayImg');
 
-    // load the text file from the repo and display image referenced on line 3
+    load the text file from the repo and display image referenced on line 3
     function loadTextFileFromRepo() {
       const url = RAW_BASE + TEXT_FILE_PATH;
 
@@ -47,9 +114,9 @@
         })
         .then(text => {
           const lines = text.split(/\r?\n/);
-          const line1 = lines[0] !== undefined ? lines[0].trim() : '';
-          const line2 = lines[1] !== undefined ? lines[1].trim() : '';
-          const line3 = lines[2] !== undefined ? lines[2].trim() : '';
+          const line1 = module.tile//lines[0] !== undefined ? lines[0].trim() : '';
+          const line2 = module.quote //lines[1] !== undefined ? lines[1].trim() : '';
+          const line3 = module.quoteimg//lines[2] !== undefined ? lines[2].trim() : '';
 
           heading2.textContent = line1 || '';
           heading3.textContent = line2 || '' ; // not used
