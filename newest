@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To Fabian</title>
+  <style>
+    body { background-color: rgb(112, 169, 205); color: rgb(34, 35, 72); text-align: center; font-family: Arial, sans-serif; font-size: 85%; padding: 20px; }
+    em { color: rgb(103, 17, 55); font-size: 80%; }
+    img { max-width: 80%; height: auto; display: block; margin: 2rem auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    #todayImg { min-height: 200px; }
+    h2 { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>To Fabian</h1>
+  <h2 id="titleDisplay"></h2>
+  <h3 id="quoteDisplay"></h3>
+
+  <div id="todayImg" aria-live="polite">
+    </div>
+
+  <div id="output"></div>
+
+  <script>
+    // 1. CONFIGURATION
+    const RAW_BASE = 'https://annikakaelin-bit.github.io/Happy-Anniversary-Fabian/';
+    const DATA_FILE = 'fabian-annika.txt'; // Your CSV/Data file
+
+    const titleHeading = document.getElementById('titleDisplay');
+    const quoteHeading = document.getElementById('quoteDisplay');
+    const imgContainer = document.getElementById('todayImg');
+    const outputDiv = document.getElementById('output');
+
+    // 2. MAIN FUNCTION
+    async function loadDailySurprise() {
+      try {
+        const response = await fetch(RAW_BASE + DATA_FILE);
+        if (!response.ok) throw new Error('Could not find the data file');
+        
+        const rawData = await response.text();
+        
+        // Split into rows and then into cells (CSV logic)
+        const rows = rawData.split(/\r?\n/).filter(line => line.trim() !== '');
+        const cells = rows.map(row => row.split(','));
+
+        if (cells.length < 2) throw new Error('Data file is empty or formatted incorrectly');
+
+        const headers = cells[0];
+        const dataRows = cells.slice(1);
+        
+        const rowCount = dataRows.length;
+        const colCount = dataRows[0].length;
+        const totalItems = rowCount * colCount;
+
+        // 3. SELECTION LOGIC
+        let index = Math.floor(Math.random() * totalItems);
+        
+        // Logic to determine column (loc)
+        let loc = Math.floor(index / rowCount); 
+        const title = headers[loc] || "A Message for You";
+
+        // Flatten data to pick the quote (similar to your original logic)
+        let flatData = dataRows.flat();
+        let quote = flatData[index] || "I love you!";
+        let quoteImg = 'heart.png'; // Default
+
+        // Special case from your original code
+        // If it's the 2nd column (index 1 in 0-based), use the text as the image name
+        if (loc === 1) { 
+          quoteImg = quote; 
+          quote = 'love you ;)';
+        }
+
+        // 4. DISPLAY TO PAGE
+        titleHeading.textContent = title;
+        quoteHeading.textContent = quote;
+
+        const imgElement = document.createElement('img');
+        // If quoteImg is just a filename, prepend the base URL
+        imgElement.src = quoteImg.includes('http') ? quoteImg : RAW_BASE + quoteImg;
+        imgElement.alt = "Love Anniversary Image";
+        
+        imgElement.onerror = () => {
+            imgContainer.innerHTML = "<em>❤️ (Image loading...)</em>";
+        };
+
+        imgContainer.innerHTML = ''; // Clear "loading"
+        imgContainer.appendChild(imgElement);
+
+      } catch (err) {
+        outputDiv.textContent = 'Error: ' + err.message;
+        console.error(err);
+      }
+    }
+
+    // Run the function
+    loadDailySurprise();
+  </script>
+</body>
+</html>
